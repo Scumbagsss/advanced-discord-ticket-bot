@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-persistence-003B57?logo=sqlite&logoColor=white)
-![Tests](https://img.shields.io/badge/unittest-19%20cases-0A9EDC)
+![Tests](https://img.shields.io/badge/unittest-21%20cases-0A9EDC)
 [![Python demo tests](https://github.com/Scumbagsss/advanced-discord-ticket-bot/actions/workflows/python-demo.yml/badge.svg)](https://github.com/Scumbagsss/advanced-discord-ticket-bot/actions/workflows/python-demo.yml)
 
 > The original Discord bot remains **private**. The public `ticket_demo.py` is a **new, independent teaching/demo implementation** using fictional users, local SQLite storage and standard-library Python. It does not copy production code, authenticate a Discord member or connect to a real server.
@@ -35,7 +35,7 @@ GitHub Actions runs the same unit suite on Python 3.11, 3.12 and 3.13.
 
 ## Features in the **runnable demo**
 
-- SQLite persistence with parameterized queries and explicit state constraints.
+- SQLite persistence with parameterized queries, explicit state constraints, connection cleanup and transaction rollback.
 - Typed `Actor` identity object (authentication is deliberately **out of scope**).
 - `open → in_progress → closed` state changes.
 - Staff-only assignment, progression and closure.
@@ -43,7 +43,7 @@ GitHub Actions runs the same unit suite on Python 3.11, 3.12 and 3.13.
 - Idempotent assignment/start operations to avoid duplicate audit entries.
 - Timestamped audit history and basic HTML transcript generation.
 - Input validation, basic HTML escaping and a synthetic CLI scenario.
-- Automated unit tests without private fixtures or third-party dependencies.
+- **21 automated unit tests**, including permissions, escaping and audit-safety checks, without private fixtures or third-party dependencies.
 
 ## Architecture
 
@@ -76,7 +76,7 @@ Existing [`src/public_interface.py`](src/public_interface.py) remains an **unimp
 ## Repository guide
 
 - [`ticket_demo.py`](ticket_demo.py) — independent runnable demonstration
-- [`tests/test_ticket_demo.py`](tests/test_ticket_demo.py) — 19 synthetic unit cases
+- [`tests/test_ticket_demo.py`](tests/test_ticket_demo.py) — 21 synthetic unit cases
 - [`.github/workflows/python-demo.yml`](.github/workflows/python-demo.yml) — automated checks
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture of the private workflow
 - [`NOTICE.md`](NOTICE.md) — the private/public boundary
