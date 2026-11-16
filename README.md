@@ -1,52 +1,88 @@
-# Advanced Discord Ticket Bot
+# Discord Ticket System — Python Backend Demo
 
-> **Portfolio showcase — production source is private and this repository is intentionally non-runnable.**
+**A commercial Discord support-workflow case study with a separate, runnable SQLite backend demonstration.**
 
-Multi-category Discord ticket system with staff assignment, statuses, participants and HTML transcripts.
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-persistence-003B57?logo=sqlite&logoColor=white)
+![Tests](https://img.shields.io/badge/unittest-19%20cases-0A9EDC)
+[![Python demo tests](https://github.com/Scumbagsss/advanced-discord-ticket-bot/actions/workflows/python-demo.yml/badge.svg)](https://github.com/Scumbagsss/advanced-discord-ticket-bot/actions/workflows/python-demo.yml)
 
-## What it demonstrates
+> The original Discord bot remains **private**. The public `ticket_demo.py` is a **new, independent teaching/demo implementation** using fictional users, local SQLite storage and standard-library Python. It does not copy production code, authenticate a Discord member or connect to a real server.
 
-- Multiple ticket categories
-- Dynamic forms
-- Private ticket channels
-- Staff assignment
-- Status workflow
-- Participant management
-- Required close reason
-- HTML transcript export
+## Why this matters
 
-## Technology
+A support ticket is a workflow, not just a chat channel. It needs an owner, assigned staff, permission checks, explicit state changes, a resolution reason and reliable historical records. The private Discord system provides interactive request categories, staff assignment, ticket statuses and HTML transcripts.
 
-Python • discord.py • Dynamic Modals • Persistent Views • HTML export
+This repository demonstrates several of those **backend engineering concerns in a runnable, synthetic implementation**, independently of the proprietary production application.
 
-## High-level workflow
+## Run locally
 
-1. Choose ticket category
-2. Collect category-specific fields
-3. Create private ticket
-4. Route/assign staff
-5. Resolve and export transcript
+Requires **Python 3.11 or newer**. No pip installation, Discord token, API key or external service is required.
 
-## Public interface preview
+```bash
+python ticket_demo.py --db demo-tickets.sqlite3
+```
 
-The public skeleton exposes only the architectural surface:
+The program creates a fictional ticket, assigns it, starts review, closes it and prints its state plus audit events as JSON. It creates a local database file. Do not commit that file.
 
-- `create_ticket(...)`
-- `assign_staff(...)`
-- `set_status(...)`
-- `add_participant(...)`
-- `close_ticket(...)`
-- `export_transcript(...)`
+Run the tests:
 
-The production implementations behind these methods are withheld. See [`NOTICE.md`](NOTICE.md).
+```bash
+python -m unittest discover -s tests -v
+```
 
-## Repository contents
+GitHub Actions runs the same unit suite on Python 3.11, 3.12 and 3.13.
 
-- `src/public_interface.py` — non-runnable interface skeleton;
-- `docs/ARCHITECTURE.md` — high-level design;
-- `examples/config.example.jsonc` — sanitized configuration shape;
-- `LICENSE` — explicit all-rights-reserved notice.
+## Features in the **runnable demo**
 
-## Status
+- SQLite persistence with parameterized queries and explicit state constraints.
+- Typed `Actor` identity object (authentication is deliberately **out of scope**).
+- `open → in_progress → closed` state changes.
+- Staff-only assignment, progression and closure.
+- Transactional updates with `BEGIN IMMEDIATE` for competing state writes.
+- Idempotent assignment/start operations to avoid duplicate audit entries.
+- Timestamped audit history and basic HTML transcript generation.
+- Input validation, basic HTML escaping and a synthetic CLI scenario.
+- Automated unit tests without private fixtures or third-party dependencies.
 
-Production-tested private project / portfolio edition.
+## Architecture
+
+```mermaid
+flowchart LR
+    UI[CLI demo / prospective Discord adapter] --> S[TicketStore service]
+    S --> R[Validation and authorization rules]
+    S --> D[(SQLite tickets and event history)]
+    S --> H[HTML transcript]
+```
+
+The public code is intentionally small. The `Actor` is trusted input from the caller: **it must not be instantiated from an unverified API request or Discord user-controlled payload**. Production-facing adapters would need authentication, request rate limits, staff role verification and observability.
+
+## Production project: private case study
+
+The commercial Discord workflow includes category-specific forms, ticket channel management, assignment, additional participants and HTML exports. The complete implementation and runtime configurations are not publicly released.
+
+| Capability | Public demo | Private Discord system |
+|---|---|---|
+| Ticket creation and lifecycle | Yes — local SQLite | Discord interactions |
+| Staff permissions | Simplified trusted `Actor` | Discord role/staff checks |
+| Audit events | SQLite history | Operational audit |
+| HTML transcript | Basic escaped HTML | Discord transcript export |
+| Discord events and persistent UI | No | Private |
+| External API authentication | No | Environment-specific |
+| Production deployment | No | Private |
+
+Existing [`src/public_interface.py`](src/public_interface.py) remains an **unimplemented, non-runnable architectural sketch**, separate from `ticket_demo.py`.
+
+## Repository guide
+
+- [`ticket_demo.py`](ticket_demo.py) — independent runnable demonstration
+- [`tests/test_ticket_demo.py`](tests/test_ticket_demo.py) — 19 synthetic unit cases
+- [`.github/workflows/python-demo.yml`](.github/workflows/python-demo.yml) — automated checks
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture of the private workflow
+- [`NOTICE.md`](NOTICE.md) — the private/public boundary
+
+## Trade-offs
+
+This is **not a deployable Discord bot or production API service**. It intentionally omits persistent Discord views, actor authentication, distributed workers, retry/backoff orchestration, multi-tenant isolation, migrations and production-grade access controls.
+
+**Author:** [Scumbagsss](https://github.com/Scumbagsss) · Python Backend / Automation
