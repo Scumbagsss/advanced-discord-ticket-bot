@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from html import escape
@@ -48,11 +49,17 @@ class TicketStore:
                 );
             """)
 
+    @contextmanager
     def connect(self):
+        """Commit on success, roll back on failure, and always close the connection."""
         db = sqlite3.connect(self.path, timeout=5)
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA foreign_keys=ON")
-        return db
+        try:
+            with db:
+                yield db
+        finally:
+            db.close()
 
     @staticmethod
     def validate(value: str, name: str, limit: int) -> str:
