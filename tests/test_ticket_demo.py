@@ -100,6 +100,18 @@ class TicketTests(unittest.TestCase):
         ticket_id = self.store.create(self.player, subject, "Content")
         self.assertEqual(self.store.get(ticket_id)["subject"], subject)
 
+    def test_close_reason_is_escaped_in_export(self):
+        self.store.close(self.staff, self.id, "<script>unsafe</script>")
+        html = self.store.export_html(self.id)
+        self.assertIn("&lt;script&gt;unsafe&lt;/script&gt;", html)
+        self.assertNotIn("<script>", html)
+
+    def test_unauthorized_action_preserves_audit_history(self):
+        original = self.store.history(self.id)
+        with self.assertRaises(WorkflowError):
+            self.store.assign(self.player, self.id, "hijack")
+        self.assertEqual(self.store.history(self.id), original)
+
     def test_reject_in_memory(self):
         with self.assertRaises(ValueError):
             TicketStore(":memory:")
