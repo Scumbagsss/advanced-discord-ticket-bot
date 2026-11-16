@@ -86,3 +86,5 @@ Existing [`src/public_interface.py`](src/public_interface.py) remains an **unimp
 This is **not a deployable Discord bot or production API service**. It intentionally omits persistent Discord views, actor authentication, distributed workers, retry/backoff orchestration, multi-tenant isolation, migrations and production-grade access controls.
 
 **Author:** [Scumbagsss](https://github.com/Scumbagsss) · Python Backend / Automation
+
+**Contact:** Discord — `scumbagsss` · Telegram — [@dilarion](https://t.me/dilarion).
