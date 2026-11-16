@@ -1,0 +1,33 @@
+name: Python demo tests
+
+on:
+  push:
+    paths:
+      - "ticket_demo.py"
+      - "tests/**"
+      - ".github/workflows/python-demo.yml"
+  pull_request:
+    paths:
+      - "ticket_demo.py"
+      - "tests/**"
+      - ".github/workflows/python-demo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: python -m py_compile ticket_demo.py
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
