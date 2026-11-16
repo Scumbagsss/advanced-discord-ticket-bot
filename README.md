@@ -15,6 +15,10 @@ A support ticket is a workflow, not just a chat channel. It needs an owner, assi
 
 This repository demonstrates several of those **backend engineering concerns in a runnable, synthetic implementation**, independently of the proprietary production application.
 
+![Synthetic ticket workflow demonstration](assets/ticket-workflow.svg)
+
+*This visual uses fictional actors and the states implemented in the standalone SQLite demo. It is not a screenshot of the private Discord bot.*
+
 ## Run locally
 
 Requires **Python 3.11 or newer**. No pip installation, Discord token, API key or external service is required.
